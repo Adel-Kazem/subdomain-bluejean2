@@ -622,5 +622,70 @@ const PRODUCTS = [
     categories: [],
     createdAt: "2025-05-07T16:23:18.251Z",
     updatedAt: "2025-05-07T16:23:18.251Z"
+ },
+ {
+    id: 9,
+    name: "New Product",
+    description: "",
+    base_price: 0,
+    base_shipping_cost: 0,
+    free_shipping: true,
+    sku: "PRD-009",
+    slug: "new-product",
+    brand: "",
+    rating: 0,
+    reviews_count: 0,
+    status: "active",
+    isFeatured: false,
+    isOnSale: false,
+    requiresShipping: true,
+    requiresInventoryTracking: true,
+    stock: 0,
+    hasVariants: true,
+    totalVariantStock: 20,
+    lowStockThreshold: 5,
+    features: {},
+    images: [],
+    options: {
+      colorzz: [
+        "blue",
+        "orange"
+      ]
+    },
+    option_images: {
+      colorzz: {
+        blue: [
+          "https://raw.githubusercontent.com/Adel-Kazem/subdomain-bluejean2/main/products_images/5.png"
+        ],
+        orange: [
+          "https://raw.githubusercontent.com/Adel-Kazem/subdomain-bluejean2/main/products_images/2.png"
+        ]
+      }
+    },
+    variant_images: {},
+    option_variants_stock: {
+      blue: 10,
+      orange: 10
+    },
+    option_price_adjustments: {
+      colorzz: {
+        blue: 10
+      }
+    },
+    option_shipping_adjustments: {},
+    weight: {
+      value: 0,
+      unit: "kg"
+    },
+    dimensions: {
+      length: 0,
+      width: 0,
+      height: 0,
+      unit: "cm"
+    },
+    option_dimension_overrides: {},
+    categories: [],
+    createdAt: "2025-05-07T18:42:52.539Z",
+    updatedAt: "2025-05-07T18:42:52.539Z"
  }
 ];
