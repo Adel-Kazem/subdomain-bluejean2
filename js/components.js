@@ -1,6 +1,5 @@
 // components.js - Shared Alpine.js Components for LuxuryByJulie
 document.addEventListener('alpine:init', () => {
-
     // Site Header Component
     Alpine.data('siteHeader', (config = {}) => {
         return {
@@ -12,8 +11,8 @@ document.addEventListener('alpine:init', () => {
         <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-lg" x-data="{ isOpen: false }">
           <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
-              <!-- Logo - Replaced with Brush Style -->
-              <a href="index.html" id="main-logo" class="text-3xl font-dancing text-fuchsia-600 brush-text rotate-on-hover transition-transform duration-300">LuxuryByJulie</a>
+              <!-- Logo - Brush Style with Pink Color -->
+              <a href="index.html" id="main-logo" class="text-3xl font-dancing text-pink-500 brush-text rotate-on-hover transition-transform duration-300">LuxuryByJulie</a>
               
               <!-- Desktop Menu -->
               <div class="hidden md:flex space-x-12">
@@ -43,7 +42,14 @@ document.addEventListener('alpine:init', () => {
             </div>
             
             <!-- Mobile Menu -->
-            <div class="md:hidden" x-show="isOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-4" @click.away="isOpen = false">
+            <div class="md:hidden" x-show="isOpen" 
+                x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 -translate-y-4"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-150"
+                x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 -translate-y-4"
+                @click.away="isOpen = false">
               <div class="mt-4 flex flex-col space-y-6 py-6 px-4 bg-white rounded-lg shadow-lg">
                 <a href="index.html" id="mobile-nav-home" class="text-sm uppercase tracking-widest hover:text-pink-500" :class="activeLink === 'home' ? 'text-pink-500' : ''">Home</a>
                 <a href="products.html" id="mobile-nav-shop" class="text-sm uppercase tracking-widest hover:text-pink-500" :class="activeLink === 'shop' ? 'text-pink-500' : ''">Shop</a>
@@ -65,7 +71,7 @@ document.addEventListener('alpine:init', () => {
           <div class="max-w-7xl mx-auto">
             <div class="grid md:grid-cols-4 gap-12">
               <div>
-                <h3 id="footer-logo" class="text-2xl font-bold text-pink-500 mb-6">LuxuryByJulie</h3>
+                <h3 id="footer-logo" class="inline-block text-2xl font-dancing text-pink-500 brush-text rotate-on-hover transition-transform duration-300 mb-6">LuxuryByJulie</h3>
                 <p id="footer-slogan" class="text-zinc-600">Elegant footwear and accessories for the modern woman.</p>
               </div>
               <div>
@@ -156,30 +162,23 @@ document.addEventListener('alpine:init', () => {
         return {
             template: `
         <!-- WhatsApp Button -->
-        <a 
-          href="#" 
-          id="whatsapp-button" 
-          class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-colors z-40"
-          @click.prevent="$store.ui.openWhatsApp('Hello, I have a question about your products.')"
-        >
+        <a href="#" id="whatsapp-button" class="fixed bottom-6 right-6 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-colors z-40" 
+           @click.prevent="$store.ui.openWhatsApp('Hello, I have a question about your products.')" >
           <svg class="h-6 w-6">
             <use xlink:href="#icon-whatsapp"></use>
           </svg>
         </a>
-
+        
         <!-- Go Up Button -->
-        <button 
-          id="go-up-button" 
-          class="fixed bottom-6 left-6 bg-zinc-800 text-white p-4 rounded-full shadow-lg hover:bg-black transition-colors z-40" 
-          x-show="scrollTop" 
-          @click="$store.ui.scrollToTop()"
-          x-transition:enter="transition ease-out duration-300"
-          x-transition:enter-start="opacity-0 translate-y-4"
-          x-transition:enter-end="opacity-100 translate-y-0"
-          x-transition:leave="transition ease-in duration-300"
-          x-transition:leave-start="opacity-100 translate-y-0"
-          x-transition:leave-end="opacity-0 translate-y-4"
-        >
+        <button id="go-up-button" class="fixed bottom-6 left-6 bg-zinc-800 text-white p-4 rounded-full shadow-lg hover:bg-black transition-colors z-40" 
+                x-show="scrollTop" 
+                @click="$store.ui.scrollToTop()"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-4"
+                x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-300"
+                x-transition:leave-start="opacity-100 translate-y-0"
+                x-transition:leave-end="opacity-0 translate-y-4" >
           <svg class="h-6 w-6">
             <use xlink:href="#icon-arrow-up"></use>
           </svg>

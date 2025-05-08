@@ -1,6 +1,7 @@
 <?php
 // Configuration
 $componentsDirectory = 'C:\xampp\htdocs\subdomain-bluejean2'; // Relative path within the repository
+$componentsDirectory = ''; // Relative path within the repository
 $outputFile = 'Components_content.txt';
 
 // Files to exclude
@@ -22,6 +23,8 @@ $filteredComponentPaths = array_filter($componentPaths, function($path) use ($ex
 
 // Add additional files manually
 $additionalFiles = [
+    'C:\xampp\htdocs\subdomain-bluejean2\js\components.js',
+    'C:\xampp\htdocs\subdomain-bluejean2\index.html',
     // Your additional files here
 ];
 
