@@ -687,4 +687,66 @@ document.addEventListener('alpine:init', () => {
             }
         };
     });
+
+    // Related Products Component
+    Alpine.data('relatedProducts', function(config = {}) {
+        return {
+            products: [],
+            currentProductId: null,
+            maxProducts: config.maxProducts || 4,
+            title: config.title || 'You May Also Like',
+            allProducts: [],
+
+            init() {
+                // Get reference to all products
+                this.allProducts = typeof PRODUCTS !== 'undefined' ? PRODUCTS : [];
+
+                // Get current product ID from store or config
+                this.currentProductId = config.productId ||
+                    (Alpine.store('productData')?.currentProduct?.id);
+
+                if (this.currentProductId && this.allProducts.length > 0) {
+                    this.loadRelatedProducts();
+                }
+            },
+
+            loadRelatedProducts() {
+                // Find current product
+                const currentProduct = this.allProducts.find(p => p.id === this.currentProductId);
+
+                if (!currentProduct) return;
+
+                // Get explicitly defined related products
+                const relatedIds = currentProduct.relatedProducts || [];
+                this.products = this.allProducts.filter(p => relatedIds.includes(p.id))
+                    .slice(0, this.maxProducts);
+
+                // If not enough related products, add featured products as fallback
+                if (this.products.length < this.maxProducts) {
+                    const featuredProducts = this.allProducts.filter(p =>
+                        p.isFeatured &&
+                        p.id !== this.currentProductId &&
+                        !relatedIds.includes(p.id)
+                    );
+
+                    this.products = [...this.products, ...featuredProducts]
+                        .slice(0, this.maxProducts);
+                }
+
+                // If still not enough, just add random products
+                if (this.products.length < this.maxProducts && this.allProducts.length > this.maxProducts) {
+                    const randomProducts = this.allProducts.filter(p =>
+                        p.id !== this.currentProductId &&
+                        !this.products.some(rp => rp.id === p.id)
+                    );
+
+                    this.products = [
+                        ...this.products,
+                        ...randomProducts.slice(0, this.maxProducts - this.products.length)
+                    ];
+                }
+            }
+        };
+    });
+
 });

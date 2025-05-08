@@ -23,8 +23,8 @@ $filteredComponentPaths = array_filter($componentPaths, function($path) use ($ex
 
 // Add additional files manually
 $additionalFiles = [
-    'C:\xampp\htdocs\subdomain-bluejean2\js\components.js',
-    'C:\xampp\htdocs\subdomain-bluejean2\index.html',
+    'C:\xampp\htdocs\subdomain-bluejean2\js\product-page.js',
+    'C:\xampp\htdocs\subdomain-bluejean2\product.html',
     // Your additional files here
 ];
 
