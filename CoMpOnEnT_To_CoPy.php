@@ -1,6 +1,6 @@
 <?php
 // Configuration
-$componentsDirectory = 'js'; // Relative path within the repository
+$componentsDirectory = 'C:\xampp\htdocs\subdomain-bluejean2'; // Relative path within the repository
 $outputFile = 'Components_content.txt';
 
 // Files to exclude
@@ -11,7 +11,8 @@ $excludeFiles = [
 ];
 
 // Get all JS files in the directory
-$componentPaths = glob($componentsDirectory . '/*.js');
+//$componentPaths = glob($componentsDirectory . '/*.js');
+$componentPaths = glob($componentsDirectory . '/*.html');
 
 // Filter out excluded files
 $filteredComponentPaths = array_filter($componentPaths, function($path) use ($excludeFiles) {

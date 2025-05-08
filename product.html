@@ -48,6 +48,15 @@
             background: #555;
         }
 
+        /* Hide scrollbar for thumbnail container */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         /* Product image viewer */
         .zoom-container {
             overflow: hidden;
@@ -56,10 +65,6 @@
 
         .zoom-container img {
             transition: transform 0.3s ease;
-        }
-
-        .zoom-container:hover img {
-            transform: scale(1.05);
         }
 
         /* Quantity input styling */
@@ -80,7 +85,7 @@
 <div x-data="svgSprites" x-html="template"></div>
 
 <!-- Navigation -->
-<div x-data="siteHeader({ activeLink: 'home' })" x-html="template"></div>
+<div x-data="siteHeader({ activeLink: 'shop' })" x-html="template"></div>
 
 <!-- Breadcrumb -->
 <div class="bg-white pt-28 pb-4 px-6 border-b border-zinc-100">
@@ -115,125 +120,99 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
                 <!-- Product Image Gallery -->
                 <div class="lg:col-span-3 p-6 md:p-8" x-data="productViewer($store.productData.currentProduct)">
-                    <!-- Main Product Image -->
-                    <div class="mb-4 bg-zinc-50 rounded-xl overflow-hidden zoom-container"
-                         @mouseenter="mouseEnter($event)"
-                         @mouseleave="mouseLeave()"
-                         @mousemove="mouseMove($event)"
-                         @touchstart="touchStart($event)"
-                         @touchmove="touchMove($event)"
-                         @touchend="touchEnd()">
+                    <!-- Main Product Image - UPDATED FOR CONSISTENT DIMENSIONS -->
+                    <div class="mb-4 bg-zinc-50 rounded-xl overflow-hidden zoom-container">
                         <img
                                 id="main-product-image"
                                 x-ref="mainImage"
                                 :src="getSelectedImage()"
                                 :alt="product.name"
-                                class="w-full h-auto object-contain"
+                                class="w-full h-80 md:h-96 object-contain"
                                 :style="imgStyle"
-                                @error="handleImageError($event)">
+                                @error="handleImageError($event)"
+                                @mouseenter="mouseEnter($event)"
+                                @mouseleave="mouseLeave()"
+                                @mousemove="mouseMove($event)"
+                                @touchstart="touchStart($event)"
+                                @touchmove="touchMove($event)"
+                                @touchend="touchEnd()">
                     </div>
 
-                    <!-- Image Thumbnails -->
+                    <!-- Image Thumbnails - UPDATED FOR BETTER SCROLLING AND CONSISTENT DIMENSIONS -->
                     <div class="relative" x-show="hasThumbnails()">
-                        <div class="flex items-center">
-                            <button
-                                    id="thumbnails-prev"
-                                    class="flex-shrink-0 bg-white rounded-full p-2 shadow-md hover:bg-zinc-100 transition-colors z-10"
-                                    x-show="!isScrollLeftEnd"
-                                    @click="scrollThumbnails('left')">
-                                <svg class="h-4 w-4">
-                                    <use xlink:href="#icon-chevron-left"></use>
-                                </svg>
-                            </button>
+                        <div class="flex overflow-x-auto space-x-2 py-2 hide-scrollbar" x-ref="thumbnailsContainer" @scroll="checkScrollPosition()">
+                            <!-- Product Images Thumbnails -->
+                            <template x-for="(image, index) in product.images || []" :key="'img-'+index">
+                                <div
+                                        @click="selectImage(image)"
+                                        class="flex-shrink-0 w-20 h-20 cursor-pointer border-2 rounded-lg overflow-hidden"
+                                        :class="selectedImage === image ? 'border-pink-500' : 'border-transparent hover:border-zinc-300'">
+                                    <img
+                                            :src="image"
+                                            :alt="`${product.name} - Thumbnail ${index + 1}`"
+                                            class="w-full h-full object-cover"
+                                            @error="$event.target.src = 'https://via.placeholder.com/100?text=No+Image'">
+                                </div>
+                            </template>
 
-                            <div
-                                    x-ref="thumbnailsContainer"
-                                    class="flex overflow-x-auto px-2 py-4 gap-3 scrollbar-hide"
-                                    @scroll="checkScrollPosition()">
-
-                                <!-- Product Images Thumbnails -->
-                                <template x-for="(image, index) in product.images || []" :key="'img-'+index">
-                                    <button
-                                            class="flex-shrink-0 w-16 h-16 border-2 rounded-lg overflow-hidden"
-                                            :class="selectedImage === image ? 'border-pink-500' : 'border-transparent hover:border-zinc-300'"
-                                            @click="selectImage(image)">
-                                        <img
-                                                :src="image"
-                                                :alt="`${product.name} - Thumbnail ${index + 1}`"
-                                                class="w-full h-full object-cover"
-                                                @error="$event.target.src = 'https://via.placeholder.com/100?text=No+Image'">
-                                    </button>
-                                </template>
-
-                                <!-- Option Images Thumbnails -->
-                                <template x-if="product.option_images">
-                                    <template x-for="(options, optionType) in product.option_images" :key="optionType">
-                                        <template x-for="(images, optionValue) in options" :key="optionValue">
-                                            <template x-for="(image, index) in images" :key="'opt-'+optionType+'-'+optionValue+'-'+index">
-                                                <button
-                                                        class="flex-shrink-0 w-16 h-16 border-2 rounded-lg overflow-hidden"
-                                                        :class="selectedImage === image ? 'border-pink-500' : 'border-transparent hover:border-zinc-300'"
-                                                        @click="selectImage(image)"
-                                                        data-thumbnail-type="option"
-                                                        :data-option-type="optionType"
-                                                        :data-option-value="optionValue">
-                                                    <img
-                                                            :src="image"
-                                                            :alt="`${product.name} - ${optionType}: ${optionValue}`"
-                                                            class="w-full h-full object-cover"
-                                                            @error="$event.target.src = 'https://via.placeholder.com/100?text=No+Image'">
-                                                </button>
-                                            </template>
+                            <!-- Option Images Thumbnails -->
+                            <template x-if="product.option_images">
+                                <template x-for="(options, optionType) in product.option_images" :key="optionType">
+                                    <template x-for="(images, optionValue) in options" :key="optionValue">
+                                        <template x-for="(image, index) in images" :key="'opt-'+optionType+'-'+optionValue+'-'+index">
+                                            <div
+                                                    @click="selectImage(image)"
+                                                    class="flex-shrink-0 w-20 h-20 cursor-pointer border-2 rounded-lg overflow-hidden"
+                                                    :class="selectedImage === image ? 'border-pink-500' : 'border-transparent hover:border-zinc-300'"
+                                                    data-thumbnail-type="option"
+                                                    :data-option-type="optionType"
+                                                    :data-option-value="optionValue">
+                                                <img
+                                                        :src="image"
+                                                        :alt="`${product.name} - ${optionType}: ${optionValue}`"
+                                                        class="w-full h-full object-cover"
+                                                        @error="$event.target.src = 'https://via.placeholder.com/100?text=No+Image'">
+                                            </div>
                                         </template>
                                     </template>
                                 </template>
+                            </template>
 
-                                <!-- Variant Images Thumbnails -->
-                                <template x-if="product.variant_images">
-                                    <template x-for="(imageData, variantKey) in product.variant_images" :key="variantKey">
-                                        <template x-if="Array.isArray(imageData)">
-                                            <template x-for="(image, index) in imageData" :key="'var-'+variantKey+'-'+index">
-                                                <button
-                                                        class="flex-shrink-0 w-16 h-16 border-2 rounded-lg overflow-hidden"
-                                                        :class="selectedImage === image ? 'border-pink-500' : 'border-transparent hover:border-zinc-300'"
-                                                        @click="selectImage(image)"
-                                                        data-thumbnail-type="variant"
-                                                        :data-variant-key="variantKey">
-                                                    <img
-                                                            :src="image"
-                                                            :alt="`${product.name} - ${formatVariantName(variantKey)}`"
-                                                            class="w-full h-full object-cover"
-                                                            @error="$event.target.src = 'https://via.placeholder.com/100?text=No+Image'">
-                                                </button>
-                                            </template>
-                                        </template>
-                                        <template x-if="!Array.isArray(imageData)">
-                                            <button
-                                                    class="flex-shrink-0 w-16 h-16 border-2 rounded-lg overflow-hidden"
-                                                    :class="selectedImage === imageData ? 'border-pink-500' : 'border-transparent hover:border-zinc-300'"
-                                                    @click="selectImage(imageData)"
+                            <!-- Variant Images Thumbnails -->
+                            <template x-if="product.variant_images">
+                                <template x-for="(imageData, variantKey) in product.variant_images" :key="variantKey">
+                                    <template x-if="Array.isArray(imageData)">
+                                        <template x-for="(image, index) in imageData" :key="'var-'+variantKey+'-'+index">
+                                            <div
+                                                    @click="selectImage(image)"
+                                                    class="flex-shrink-0 w-20 h-20 cursor-pointer border-2 rounded-lg overflow-hidden"
+                                                    :class="selectedImage === image ? 'border-pink-500' : 'border-transparent hover:border-zinc-300'"
                                                     data-thumbnail-type="variant"
                                                     :data-variant-key="variantKey">
                                                 <img
-                                                        :src="imageData"
+                                                        :src="image"
                                                         :alt="`${product.name} - ${formatVariantName(variantKey)}`"
                                                         class="w-full h-full object-cover"
                                                         @error="$event.target.src = 'https://via.placeholder.com/100?text=No+Image'">
-                                            </button>
+                                            </div>
                                         </template>
                                     </template>
+                                    <template x-if="!Array.isArray(imageData)">
+                                        <div
+                                                @click="selectImage(imageData)"
+                                                class="flex-shrink-0 w-20 h-20 cursor-pointer border-2 rounded-lg overflow-hidden"
+                                                :class="selectedImage === imageData ? 'border-pink-500' : 'border-transparent hover:border-zinc-300'"
+                                                data-thumbnail-type="variant"
+                                                :data-variant-key="variantKey">
+                                            <img
+                                                    :src="imageData"
+                                                    :alt="`${product.name} - ${formatVariantName(variantKey)}`"
+                                                    class="w-full h-full object-cover"
+                                                    @error="$event.target.src = 'https://via.placeholder.com/100?text=No+Image'">
+                                        </div>
+                                    </template>
                                 </template>
-                            </div>
-
-                            <button
-                                    id="thumbnails-next"
-                                    class="flex-shrink-0 bg-white rounded-full p-2 shadow-md hover:bg-zinc-100 transition-colors z-10"
-                                    x-show="!isScrollRightEnd"
-                                    @click="scrollThumbnails('right')">
-                                <svg class="h-4 w-4">
-                                    <use xlink:href="#icon-chevron-right"></use>
-                                </svg>
-                            </button>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -581,7 +560,8 @@
                 <template x-for="product in relatedProducts" :key="product.id">
                     <article class="group bg-white rounded-xl overflow-hidden shadow-sm">
                         <a :href="'product.html?slug=' + product.slug">
-                            <div class="aspect-[5/6] overflow-hidden bg-zinc-100 relative">
+                            <!-- UPDATED RELATED PRODUCT IMAGES FOR CONSISTENT HEIGHT -->
+                            <div class="overflow-hidden bg-zinc-100 relative h-60 flex items-center justify-center">
                                 <img
                                         :src="product.images[0]"
                                         :alt="product.name"
@@ -640,6 +620,7 @@
 
     <!-- Cart notification -->
     <div
+            x-cloak
             class="fixed bottom-24 right-4 bg-black text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300"
             x-show="$store.ui.cartNotificationVisible"
             x-transition:enter="transition ease-out duration-300"
@@ -654,7 +635,6 @@
 
 <!-- Footer -->
 <div x-data="siteFooter" x-html="template"></div>
-
 <div x-data="floatingButtons" x-html="template"></div>
 </body>
 </html>

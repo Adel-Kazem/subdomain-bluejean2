@@ -12,8 +12,8 @@ document.addEventListener('alpine:init', () => {
         <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-lg" x-data="{ isOpen: false }">
           <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
-              <!-- Logo -->
-              <a href="index.html" id="main-logo" class="text-3xl font-extrabold tracking-wider text-pink-500">LuxuryByJulie</a>
+              <!-- Logo - Replaced with Brush Style -->
+              <a href="index.html" id="main-logo" class="text-3xl font-dancing text-fuchsia-600 brush-text rotate-on-hover transition-transform duration-300">LuxuryByJulie</a>
               
               <!-- Desktop Menu -->
               <div class="hidden md:flex space-x-12">
@@ -31,7 +31,6 @@ document.addEventListener('alpine:init', () => {
                   </svg>
                   <span class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center" x-text="$store.cart.getTotalItems()">0</span>
                 </a>
-                
                 <button class="md:hidden" @click="isOpen = !isOpen">
                   <svg x-show="!isOpen" class="h-6 w-6">
                     <use xlink:href="#icon-menu"></use>
